@@ -3,74 +3,227 @@
   <head>
     <meta charset="UTF-8" />
     <title>Boston House Price Prediction</title>
+
+    <!-- Google Font -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
     <style>
+      :root {
+        --bg-black: #0b0b0b;
+        --glass-bg: rgba(255, 255, 255, 0.06);
+        --neon-orange: #ff6600;
+        --text-white: #ffffff;
+      }
+
+      * {
+        box-sizing: border-box;
+        font-family: "Inter", sans-serif;
+      }
+
       body {
-        font-family: Arial, sans-serif;
-        background: #f4f6f8;
+        margin: 0;
+        min-height: 100vh;
+        background: var(--bg-black);
+        color: var(--text-white);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
       }
-      .login {
-        width: 400px;
-        margin: 50px auto;
-        padding: 25px;
-        background: #ffffff;
-        border-radius: 8px;
-        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+
+      /* Subtle noise overlay */
+      body::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image: url("https://www.transparenttextures.com/patterns/asfalt-light.png");
+        opacity: 0.08;
+        pointer-events: none;
       }
+
+      /* Radial glow */
+      body::before {
+        content: "";
+        position: absolute;
+        width: 500px;
+        height: 500px;
+        background: radial-gradient(
+          circle,
+          rgba(255, 102, 0, 0.25),
+          transparent 70%
+        );
+        top: -120px;
+        right: -120px;
+        filter: blur(80px);
+      }
+
+      .container {
+        width: 100%;
+        max-width: 1000px;
+        background: rgba(255, 255, 255, 0.04);
+        backdrop-filter: blur(16px);
+        border-radius: 20px;
+        padding: 40px 45px;
+        box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
+        position: relative;
+        z-index: 1;
+      }
+
       h1 {
         text-align: center;
+        font-weight: 700;
+        margin-bottom: 6px;
+        letter-spacing: 0.5px;
       }
-      input[type="text"] {
-        width: 100%;
-        padding: 8px;
-        margin: 6px 0;
-      }
-      button {
-        width: 100%;
-        padding: 10px;
-        background: #007bff;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        font-size: 16px;
-        cursor: pointer;
-      }
-      button:hover {
-        background: #0056b3;
-      }
-      .result {
-        margin-top: 15px;
+
+      .subtitle {
         text-align: center;
-        font-weight: bold;
+        font-size: 14px;
+        opacity: 0.75;
+        margin-bottom: 35px;
+      }
+
+      /* Bento grid */
+      form {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+      }
+
+      input {
+        background: var(--glass-bg);
+        border: 1px solid rgba(255, 102, 0, 0.35);
+        border-radius: 12px;
+        padding: 12px 14px;
+        font-size: 14px;
+        color: white;
+        outline: none;
+        transition: all 0.25s ease;
+      }
+
+      input::placeholder {
+        color: rgba(255, 255, 255, 0.6);
+      }
+
+      input:hover {
+        transform: translateY(-2px);
+        border-color: rgba(255, 102, 0, 0.8);
+      }
+
+      input:focus {
+        border-color: var(--neon-orange);
+        box-shadow: 0 0 12px rgba(255, 102, 0, 0.5);
+        transform: translateY(-3px);
+      }
+
+      button {
+        grid-column: span 4;
+        margin-top: 20px;
+        padding: 14px;
+        border-radius: 14px;
+        border: none;
+        background: var(--neon-orange);
+        color: black;
+        font-size: 16px;
+        font-weight: 700;
+        cursor: pointer;
+        letter-spacing: 0.6px;
+        animation: pulse 2s infinite;
+        transition:
+          transform 0.2s ease,
+          box-shadow 0.2s ease;
+      }
+
+      button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 0 25px rgba(255, 102, 0, 0.8);
+      }
+
+      @keyframes pulse {
+        0% {
+          box-shadow: 0 0 0 rgba(255, 102, 0, 0.4);
+        }
+        70% {
+          box-shadow: 0 0 18px rgba(255, 102, 0, 0.6);
+        }
+        100% {
+          box-shadow: 0 0 0 rgba(255, 102, 0, 0.4);
+        }
+      }
+
+      .result {
+        margin-top: 30px;
+        padding: 18px;
+        border-radius: 14px;
+        background: rgba(0, 0, 0, 0.45);
+        text-align: center;
+        font-size: 20px;
+        font-weight: 600;
+        border: 1px solid rgba(255, 102, 0, 0.5);
+        box-shadow: 0 0 20px rgba(255, 102, 0, 0.35);
+      }
+
+      footer {
+        margin-top: 25px;
+        text-align: center;
+        font-size: 12px;
+        opacity: 0.6;
+      }
+
+      @media (max-width: 900px) {
+        form {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        button {
+          grid-column: span 2;
+        }
+      }
+
+      @media (max-width: 480px) {
+        form {
+          grid-template-columns: 1fr;
+        }
+        button {
+          grid-column: span 1;
+        }
       }
     </style>
   </head>
 
   <body>
-    <div class="login">
+    <div class="container">
       <h1>Boston House Price Prediction</h1>
+      <div class="subtitle">
+        Machine Learning Regression Model · Prices in $1000s
+      </div>
 
-      <!-- Form sends data to /predict -->
       <form action="{{ url_for('predict') }}" method="post">
-        <input type="text" name="CRIM" placeholder="CRIM" required />
-        <input type="text" name="ZN" placeholder="ZN" required />
-        <input type="text" name="INDUS" placeholder="INDUS" required />
-        <input type="text" name="CHAS" placeholder="CHAS (0 or 1)" required />
-        <input type="text" name="NOX" placeholder="NOX" required />
-        <input type="text" name="RM" placeholder="RM" required />
-        <input type="text" name="AGE" placeholder="AGE" required />
-        <input type="text" name="DIS" placeholder="DIS" required />
-        <input type="text" name="RAD" placeholder="RAD" required />
-        <input type="text" name="TAX" placeholder="TAX" required />
-        <input type="text" name="PTRATIO" placeholder="PTRATIO" required />
-        <input type="text" name="B" placeholder="B" required />
-        <input type="text" name="LSTAT" placeholder="LSTAT" required />
+        <input name="CRIM" placeholder="CRIM" required />
+        <input name="ZN" placeholder="ZN" required />
+        <input name="INDUS" placeholder="INDUS" required />
+        <input name="CHAS" placeholder="CHAS (0/1)" required />
+        <input name="NOX" placeholder="NOX" required />
+        <input name="RM" placeholder="RM" required />
+        <input name="AGE" placeholder="AGE" required />
+        <input name="DIS" placeholder="DIS" required />
+        <input name="RAD" placeholder="RAD" required />
+        <input name="TAX" placeholder="TAX" required />
+        <input name="PTRATIO" placeholder="PTRATIO" required />
+        <input name="B" placeholder="B" required />
+        <input name="LSTAT" placeholder="LSTAT" required />
 
-        <button type="submit">Predict</button>
+        <button type="submit">PREDICT</button>
       </form>
 
       {% if prediction_text %}
       <div class="result">{{ prediction_text }}</div>
       {% endif %}
+
+      <footer>Made by Ninad Amane.</footer>
     </div>
   </body>
 </html>
